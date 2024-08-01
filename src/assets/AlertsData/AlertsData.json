@@ -1,0 +1,55 @@
+{
+    "newAlerts": [
+        {
+          "id": "ID123460",
+          "timestamp": "07/30/2024 08:15 AM",
+          "message": "Curabitur blandit tempus porttitor. Cras mattis consectetuer purus sit amet fermentum.",
+          "severity": "low"
+        },
+        {
+          "id": "ID123461",
+          "timestamp": "04/07/2024 09:45 AM",
+          "message": "Curabitur blandit tempus porttitor. Cras mattis consectetuer purus sit amet fermentum.",
+          "severity": "high"
+        },
+        {
+          "id": "ID123462",
+          "timestamp": "07/25/2024 02:30 PM",
+          "message": "Curabitur blandit tempus porttitor. Cras mattis consectetuer purus sit amet fermentum.",
+          "severity": "low"
+        },
+        {
+          "id": "ID123463",
+          "timestamp": "01/02/2024 07:00 AM",
+          "message": "Curabitur blandit tempus porttitor. Cras mattis consectetuer purus sit amet fermentum.",
+          "severity": "high"
+        }
+      ],
+      "alertLogs": [
+        {
+          "id": "ID123460",
+          "timestamp": "07/30/2024 08:15 AM",
+          "message": "Curabitur blandit tempus porttitor. Cras mattis consectetuer purus sit amet fermentum.",
+          "severity": "low"
+        },
+        {
+          "id": "ID123461",
+          "timestamp": "04/07/2024 09:45 AM",
+          "message": "Curabitur blandit tempus porttitor. Cras mattis consectetuer purus sit amet fermentum.",
+          "severity": "high"
+        },
+        {
+          "id": "ID123462",
+          "timestamp": "07/25/2024 02:30 PM",
+          "message": "Curabitur blandit tempus porttitor. Cras mattis consectetuer purus sit amet fermentum.",
+          "severity": "low"
+        },
+        {
+          "id": "ID123463",
+          "timestamp": "01/02/2024 07:00 AM",
+          "message": "Curabitur blandit tempus porttitor. Cras mattis consectetuer purus sit amet fermentum.",
+          "severity": "high"
+        }
+      ]
+
+}
