@@ -1,3 +1,4 @@
+
 import { Box, Typography } from "@mui/material"
 import LaunchIcon from '@mui/icons-material/Launch';
 import ReportTable from "./ReportTable/ReportTable";
@@ -11,10 +12,23 @@ import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRig
 
 function Reports() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [index, setIndex] = useState(1);
+  const [maxIndex, setMaxIndex] = useState(2);
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-      
+  
+  const increase = () => {
+      if(index<maxIndex){
+        setIndex(index+1);
+      }
+  };
+
+  const decrease = () => {
+    if(index>1){
+      setIndex(index-1);
+    }
+    };
 
   return (
     <Box sx={{
@@ -36,16 +50,17 @@ function Reports() {
                 </Box>
                 <LaunchIcon />
             </Box>
-            <ReportTable searchTerm={searchTerm}/>
+            <ReportTable searchTerm={searchTerm} index={index}/>
             <Box sx={{display: "flex", justifyContent: "center", marginTop: "1.6rem"}}>
               <Box sx={{display: "flex", alignItems: "center"}}>
-                <Box><KeyboardArrowLeftOutlinedIcon /></Box>
+                <Box sx={{paddingTop: "0.5rem"}} onClick={decrease}><KeyboardArrowLeftOutlinedIcon /></Box>
                 <Box sx={{display: "flex", alignItems: "center", margin: "0 1rem", gap: "0.5rem"}}>
                   <Typography>Page</Typography>
-                  <Typography sx={{borderRadius: "0.6rem",margin: "0 1rem", border: "0.1rem solid black", padding: "0.7rem 1rem"}}>1</Typography>
-                  <Typography>##</Typography>
+                  <Typography sx={{borderRadius: "0.6rem",margin: "0 1rem", border: "0.1rem solid black", padding: "0.7rem 1rem"}}>{index}</Typography>
+                  <Typography sx={{marginRight: "0.5rem"}}>of</Typography>
+                  <Typography>{maxIndex}</Typography>
                 </Box>
-                <Box><KeyboardArrowRightOutlinedIcon /></Box>
+                <Box sx={{paddingTop: "0.5rem"}} onClick={increase}><KeyboardArrowRightOutlinedIcon /></Box>
               </Box>
             </Box>
     </Box>

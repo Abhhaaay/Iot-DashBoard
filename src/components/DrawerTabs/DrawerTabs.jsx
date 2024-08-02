@@ -1,6 +1,6 @@
+import React, { useState } from 'react';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
@@ -22,25 +22,25 @@ function DrawerTabs() {
   const [value, setValue] = useState('1');
   const [open, setOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState('');
-  const [appliedSortOrder, setAppliedSortOrder] = useState('');
+  const [filterOption, setFilterOption] = useState('');
+  const [alerts, setAlerts] = useState(AlertsData.newAlerts);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleDismissAlert = (id) => {
+    setAlerts((prevAlerts) => prevAlerts.filter(alert => alert.id !== id));
   };
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
 
-  const handleSortChange = (newSortOrder) => {
+  const applyFilters = (newSortOrder, newFilterOption) => {
     setSortOrder(newSortOrder);
-    console.log("New sort order:", newSortOrder);
-  };
-
-  const applySort = () => {
-    setAppliedSortOrder(sortOrder);
+    setFilterOption(newFilterOption);
     setOpen(false);
-    console.log("Applying sort order:", sortOrder);
   };
 
   const severityMap = {
@@ -48,13 +48,28 @@ function DrawerTabs() {
     high: 2
   };
 
-  const sortedAlertLogs = [...AlertsData.alertLogs].sort((a, b) => {
+  const filterAlerts = (alerts, filterOption) => {
+    const now = new Date();
+    return alerts.filter(alert => {
+      const alertDate = new Date(alert.timestamp);
+      if (filterOption === '24 hours') {
+        return now - alertDate <= 24 * 60 * 60 * 1000;
+      } else if (filterOption === '7 days') {
+        return now - alertDate <= 7 * 24 * 60 * 60 * 1000;
+      } else if (filterOption === '30 days') {
+        return now - alertDate <= 30 * 24 * 60 * 60 * 1000;
+      }
+      return true;
+    });
+  };
+
+  const sortedAndFilteredAlertLogs = filterAlerts([...AlertsData.alertLogs], filterOption).sort((a, b) => {
     const aSeverity = severityMap[a.severity];
     const bSeverity = severityMap[b.severity];
 
-    if (appliedSortOrder === 'high') {
+    if (sortOrder === 'high') {
       return bSeverity - aSeverity; 
-    } else if (appliedSortOrder === 'low') {
+    } else if (sortOrder === 'low') {
       return aSeverity - bSeverity; 
     }
     return 0;
@@ -64,29 +79,33 @@ function DrawerTabs() {
     <Box sx={{ width: '100%', padding: "0 1rem" }}>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList TabIndicatorProps={{style: {background:'#f6288f'}}} onChange={handleChange} aria-label="lab API tabs example">
-            <Tab style={tabStyle} label="New Alerts(4)" value="1" />
+          <TabList TabIndicatorProps={{ style: { background: '#f6288f' } }} onChange={handleChange} aria-label="lab API tabs example">
+            <Tab style={tabStyle} label={`New Alerts(${alerts.length})`} value="1" />
             <Tab style={tabStyle} label="Alert logs" value="2" />
           </TabList>
         </Box>
         <TabPanel value="1" sx={{ padding: "1rem 0.5rem" }}>
-          {AlertsData.newAlerts.map((alert) => (
+          {alerts.map((alert) => (
             <Alert 
               key={alert.id}
               id={alert.id}
               timestamp={alert.timestamp}
               message={alert.message}
               severity={alert.severity}
+              onClose={handleDismissAlert}
             />
           ))}
         </TabPanel>
         <TabPanel value="2" sx={{ padding: "1rem 0.5rem" }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #dbdbdb", paddingBottom: "0.5rem" }}>
             <Button onClick={toggleDrawer(true)} startIcon={<FilterListIcon />} sx={{ textTransform: "none", color: "#F6288F", fontWeight: "700" }}>Sort & filter</Button>
-            <Button startIcon={<AutorenewIcon />} sx={{ textTransform: "none", fontWeight: "600", color: "#aeb0af" }} onClick={() => setAppliedSortOrder('')}>Clear filters</Button>
-            <FilterDrawer open={open} fn={toggleDrawer} onSortChange={handleSortChange} onApplySort={applySort} />
+            <Button startIcon={<AutorenewIcon />} sx={{ textTransform: "none", fontWeight: "600", color: "#aeb0af" }} onClick={() => {
+              setSortOrder('');
+              setFilterOption('');
+            }}>Clear filters</Button>
+            <FilterDrawer open={open} fn={toggleDrawer} onApplyFilters={applyFilters} />
           </Box>
-          {sortedAlertLogs.map((alert) => (
+          {sortedAndFilteredAlertLogs.map((alert) => (
             <AlertLog 
               key={alert.id}
               id={alert.id}

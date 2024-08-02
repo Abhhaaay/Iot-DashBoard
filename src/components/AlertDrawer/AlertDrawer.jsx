@@ -9,7 +9,7 @@ import EastIcon from '@mui/icons-material/East';
 
 function AlertDrawer(props) {
   return (
-    <Drawer open={props.open} onClose={props.fn(false)} anchor="right" ModalProps={{ disableScrollLock: true }}>
+    <Drawer open={props.open} onClose={props.fn(false)} anchor="right" ModalProps={{ disableScrollLock: false }}>
       <Box sx={{ width: 400 }} role="presentation">
         <Box sx={{
           display: "flex",

@@ -12,7 +12,7 @@ function createData(Category, Reports, Source, Description, Lastupdated) {
     return { Category, Reports, Source, Description, Lastupdated };
 }
 
-function ReportTable(props) {
+function ReportTable({ searchTerm, index }) {
     const [rows, setRows] = useState([]);
     const [filteredRows, setFilteredRows] = useState([]);
 
@@ -29,22 +29,27 @@ function ReportTable(props) {
     }, []);
 
     useEffect(() => {
-        if (props.searchTerm) {
-            const filtered = rows.filter(row => 
-                row.Reports.toLowerCase().includes(props.searchTerm.toLowerCase())
+        if (searchTerm) {
+            const filtered = rows.filter(row =>
+                row.Reports.split(" ").join("").toLowerCase().includes(searchTerm.split(" ").join("").toLowerCase())
             );
             setFilteredRows(filtered);
         } else {
             setFilteredRows(rows);
         }
-    }, [props.searchTerm, rows]);
+    }, [searchTerm, rows]);
 
-    const rowsToDisplay = props.searchTerm ? filteredRows : rows;
+    // Pagination logic
+    const pageSize = 10;
+    const startIndex = (index - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedRows = filteredRows.slice(startIndex, endIndex);
 
     const highlightText = (text, searchTerm) => {
         if (!text || !searchTerm) return text;
 
-        const regex = new RegExp(`(${searchTerm})`, 'gi');
+        const escapedSearchTerm = searchTerm.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&');
+        const regex = new RegExp(`(${escapedSearchTerm})`, 'gi');
         const parts = text.split(regex);
 
         return parts.map((part, index) =>
@@ -59,7 +64,7 @@ function ReportTable(props) {
     return (
         <TableContainer>
             <Table aria-label="simple table" sx={{ border: "none" }}>
-                <TableHead >
+                <TableHead>
                     <TableRow>
                         <TableCell>Category</TableCell>
                         <TableCell>Reports</TableCell>
@@ -70,7 +75,7 @@ function ReportTable(props) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rowsToDisplay.map((row) => (
+                    {paginatedRows.map((row) => (
                         <TableRow
                             key={row.Reports}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -78,7 +83,7 @@ function ReportTable(props) {
                             <TableCell component="th" scope="row">
                                 {row.Category}
                             </TableCell>
-                            <TableCell>{highlightText(row.Reports, props.searchTerm)}</TableCell>
+                            <TableCell>{highlightText(row.Reports, searchTerm)}</TableCell>
                             <TableCell>{row.Source}</TableCell>
                             <TableCell>{row.Description}</TableCell>
                             <TableCell>{row.Lastupdated}</TableCell>
